@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  kimai-db:
+    image: mysql:5.7
+    container_name: kimai-db
+    hostname: kimai-db
+    volumes:
+      - ./db/data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: kimai
+      MYSQL_DATABASE: kimai
+      MYSQL_USER: kimai
+      MYSQL_PASSWORD: kimai
+    command: --default-storage-engine innodb
+    restart: unless-stopped
+
+
+  kimai:
+    image: kimai/kimai2:apache
+    container_name: kimai-server
+    hostname: kimai-server
+    depends_on:
+      - kimai-db
+#    volumes:
+#      - ./wp/wp-content:/var/www/html/wp-content
+      # Add other files or folders that you want to override here e.g. stylesheets
+    ports:
+      - "80:8001"
+    restart: always
+    environment:
+      - DATABASE_URL=mysql://kimai:kimai@kimai-db/kimai
+      - TRUSTED_HOSTS=nginx,localhost,127.0.0.1                             ### hosts_trust for web services
+    restart: unless-stopped
