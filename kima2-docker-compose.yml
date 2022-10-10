@@ -23,9 +23,6 @@ services:
     hostname: kimai-server
     depends_on:
       - kimai-db
-#    volumes:
-#      - ./wp/wp-content:/var/www/html/wp-content
-      # Add other files or folders that you want to override here e.g. stylesheets
     ports:
       - "80:8001"
     restart: always
